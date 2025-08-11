@@ -1,15 +1,11 @@
 /// <reference path="../pb_data/types.d.ts" />
 
 routerAdd("POST", "/v1/feedback", (e) => {
-  function authorization_id(authorization) {
-    if (!authorization) return null;
-    const [method, id] = authorization.split(" ", 2);
-    if (method !== "Id" || !id) return null;
-    return id;
-  }
+  const utils = require(`${__hooks}/utils.cjs`);
 
-  const authorization = e.request.header.get("Authorization");
-  const author_id = authorization_id(authorization);
+  const author_id = utils.authorization_id(
+    e.request.header.get("Authorization"),
+  );
   if (!author_id) return e.json(403, { error: true });
 
   const collection = $app.findCollectionByNameOrId("reports");
