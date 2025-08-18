@@ -1,0 +1,21 @@
+[Unit]
+Description = Water Finder Feedback
+After = network.target
+
+[Service]
+ExecStart        = pocketbase --automigrate=false serve
+Type             = simple
+Restart          = always
+RestartSec       = 5s
+ReadWritePaths   = /var/www/feedback
+WorkingDirectory = /var/www/feedback
+EnvironmentFile  = /var/www/feedback/environment
+DynamicUser      = yes
+ProtectSystem    = strict
+ProtectHome      = yes
+PrivateDevices   = yes
+PrivateUsers     = yes
+PrivateTmp       = yes
+
+[Install]
+WantedBy = multi-user.target
