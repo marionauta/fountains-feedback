@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>Water Finder Reports</title>
+    <script defer src="/js/alpinejs.3.15.2.min.js"></script>
+    <style>
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li { padding: 0.5em 0 }
+      li span { display: block }
+    </style>
+  </head>
+  <body>
+    <noscript>You need JavaScript enabled to see this website</noscript>
+    <div
+      x-data="{ osm: null, reports: [] }"
+      x-init="
+        osm = new URLSearchParams(window.location.search).get('osm');
+        if (osm) reports = (await (await fetch(`/v1/feedback/${osm}`)).json()).data;
+    ">
+      <h1>Reports for <span x-text="osm"></span></h1>
+      <a x-bind:href="`https://openstreetmap.org/node/${osm}`">
+        Open in OpenStreetMaps
+      </a>
+      <ul>
+        <template x-for="report in reports">
+          <li>
+            <span class="date" x-text="report.created_at.split('T')[0]"></span>
+            <span class="state" x-text="report.state"></span>
+            <span class="comment" x-text="report.comment"></span>
+          </li>
+        </template>
+      </ul>
+    </div>
+  </body>
+</html>
